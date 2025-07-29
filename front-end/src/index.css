@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+body {
+  background: #a8dadc;
+  background: linear-gradient(
+    90deg,
+    rgb(243, 246, 246),
+    rgb(164, 185, 198),
+    rgb(144, 165, 177)
+  );
+}
