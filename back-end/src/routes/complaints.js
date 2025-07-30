@@ -7,15 +7,17 @@ import {
   getAllComplaints,
   getComplaintById,
 } from "../controllers/complaints.js";
+import { verifyToken } from "../middlewares/auth.js";
 // import { verifyToken } from "../middlewares/auth.js";
 
 router.post(
   "/submit-complaint",
+  verifyToken,
 
   upload.single("file"),
   createComplaint
 );
-router.get("/complaints", getAllComplaints);
-router.get("/complaints/:id", getComplaintById);
+router.get("/complaints", verifyToken, getAllComplaints);
+router.get("/complaints/:id", verifyToken, getComplaintById);
 
 export default router;

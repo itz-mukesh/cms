@@ -1,6 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Page1 = () => {
+import axios from "axios";
+
+const Register = () => {
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleRagister = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post("http://localhost:5050/api/user/register", {
+        name,
+        phone,
+        email,
+        password,
+        role: "citizen",
+      });
+
+      if (res.data.success) {
+        localStorage.setItem("token", res.data.token);
+        navigate("/login");
+      } else {
+        alert("Invalid credentials");
+      }
+    } catch (err) {
+      console.log(err);
+      alert("register failed");
+    }
+  };
+
   return (
     <>
       <div className="flex justify-between items-center pt-[84px]">
@@ -19,7 +51,7 @@ const Page1 = () => {
                 Register a account to be a hero
               </h2>
 
-              <form className="space-y-5">
+              <form onSubmit={handleRagister} className="space-y-5">
                 <div>
                   <input
                     type="text"
@@ -27,6 +59,8 @@ const Page1 = () => {
                     name="fullname"
                     className="mt-1 block w-full border border-gray-800 rounded-md p-3 px-5 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Full name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
                   />
                 </div>
@@ -38,6 +72,8 @@ const Page1 = () => {
                     name="email"
                     className="mt-1 block w-full border border-gray-800 rounded-md p-3 px-5 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </div>
@@ -49,6 +85,8 @@ const Page1 = () => {
                     name="phone"
                     className="mt-1 block w-full border border-gray-800 rounded-md p-3 px-5 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Phone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                     required
                   />
                 </div>
@@ -60,17 +98,8 @@ const Page1 = () => {
                     name="password"
                     className="mt-1 block w-full border border-gray-800 rounded-md p-3 px-5 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Password"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <input
-                    type="password"
-                    id="confirm"
-                    name="confirm"
-                    className="mt-1 block w-full border border-gray-800 rounded-md p-3 px-5 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Confirm Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
                   />
                 </div>
@@ -90,4 +119,4 @@ const Page1 = () => {
   );
 };
 
-export default Page1;
+export default Register;
