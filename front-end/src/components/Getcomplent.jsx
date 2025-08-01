@@ -108,7 +108,7 @@ const Getcomplent = () => {
                 {selectedId === c._id && c.image && (
                   <div className="mt-4">
                     <img
-                      src={`http://localhost:5050${c.image}`}
+                      src={c.image}
                       alt="Complaint"
                       className="w-64 h-64 object-cover rounded shadow"
                     />
