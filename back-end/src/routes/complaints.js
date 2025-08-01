@@ -7,7 +7,6 @@ import {
   getAllComplaints,
   getComplaintById,
 } from "../controllers/complaints.js";
-// import authMiddleware from "../middlewares/auth.js";
 
 router.post("/create", upload.single("file"), createComplaint);
 router.get("/get-all", getAllComplaints);

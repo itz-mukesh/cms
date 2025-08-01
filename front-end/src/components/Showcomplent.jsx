@@ -1,11 +1,23 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Showcomplent = () => {
+  const navigate = useNavigate();
   const [complaints, setComplaints] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
 
   const fetchData = () => {
-    fetch("http://localhost:5050/api/complaint/get-all")
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/Adminlogin");
+    }
+    fetch("http://localhost:5050/api/complaint/get-all", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => res.json())
       .then((data) => setComplaints(data.data))
       .catch((err) => console.error("Error fetching complaints:", err));
