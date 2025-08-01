@@ -1,23 +1,16 @@
-import express from "express";
-const router = express.Router();
+import { Router } from "express";
+const router = Router();
 
-import createComplaint from "../controllers/complaints.js";
 import { upload } from "../middlewares/complent.js";
 import {
+  createComplaint,
   getAllComplaints,
   getComplaintById,
 } from "../controllers/complaints.js";
-import { verifyToken } from "../middlewares/auth.js";
-// import { verifyToken } from "../middlewares/auth.js";
+// import authMiddleware from "../middlewares/auth.js";
 
-router.post(
-  "/submit-complaint",
-  verifyToken,
-
-  upload.single("file"),
-  createComplaint
-);
-router.get("/complaints", verifyToken, getAllComplaints);
-router.get("/complaints/:id", verifyToken, getComplaintById);
+router.post("/create", upload.single("file"), createComplaint);
+router.get("/get-all", getAllComplaints);
+router.get("/get/:id", getComplaintById);
 
 export default router;

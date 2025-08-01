@@ -22,8 +22,8 @@ const Adminlogin = () => {
       });
 
       if (res.data.success) {
-        localStorage.setItem("token", res.data.token); 
-        navigate("/dashboard2");
+        localStorage.setItem("token", res.data.token);
+        navigate("/showcomplent");
       } else {
         alert("Invalid credentials");
       }

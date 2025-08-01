@@ -23,7 +23,9 @@ const Login = () => {
 
       if (res.data.success) {
         localStorage.setItem("token", res.data.token);
-        navigate("/dashboard");
+        localStorage.setItem("role", "citizen");
+
+        navigate("/getcomplent");
       } else {
         alert("Invalid credentials");
       }

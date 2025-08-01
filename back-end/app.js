@@ -28,7 +28,7 @@ connectDB();
 
 // Routes
 app.use("/api/user", userRoutes);
-app.use("/api", complaintRoutes);
+app.use("/api/complaint", complaintRoutes);
 
 // Home route
 app.get("/", (req, res) => {

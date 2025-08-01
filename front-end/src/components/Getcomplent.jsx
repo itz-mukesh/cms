@@ -3,17 +3,42 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
-const Dashboard = () => {
+const Getcomplent = () => {
   const navigate = useNavigate();
   const [complaints, setComplaints] = useState([]);
-  const [selectedId, setSelectedId] = useState(null); // 🆕 To track which complaint is open
+  const [selectedId, setSelectedId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  // 🆕 To track which complaint is open
 
+  // useEffect(() => {
+  //   fetch("http://localhost:5050/api/complaint/get-all")
+  //     .then((res) => res.json())
+  //     .then((data) => setComplaints(data.data))
+  //     .catch((err) => console.error("Failed to fetch complaints:", err));
+  // }, []);
   useEffect(() => {
-    fetch("http://localhost:5050/api/complaints")
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    }
+
+    fetch("http://localhost:5050/api/complaint/get-all", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // ✅ yeh line add karo
+      },
+    })
       .then((res) => res.json())
       .then((data) => setComplaints(data.data))
-      .catch((err) => console.error("Failed to fetch complaints:", err));
+      .catch((err) => console.error("Failed to fetch complaints:", err))
+      .finally(() => setLoading(false));
   }, []);
+
+  const token = localStorage.getItem("token");
+  if (!token || loading) {
+    return <div className="pt-[100px] text-center text-xl">Loading...</div>;
+  }
 
   const toggleDetails = (id) => {
     if (selectedId === id) {
@@ -30,7 +55,7 @@ const Dashboard = () => {
           <h2 className="text-4xl font-bold mb-[40px]">Dashboard</h2>
           <div className="p-4 rounded-2xl border shadow-sm border-gray-600 hover:border-[#1be7ff] hover:border-[2px] hover:shadow-xl hover:scale-101 duration-300">
             <button
-              onClick={() => navigate("/Dashboard2")}
+              onClick={() => navigate("/createcomplent")}
               className="w-full border border-gray-400 p-3 rounded h-[500px] cursor-pointer text-2xl hover:font-bold hover:text-orange-700 hover:rounded-4xl hover:border-black hover:border-[2px] hover:shadow-2xl hover:scale-101 duration-300"
             >
               New Complaint
@@ -102,4 +127,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Getcomplent;

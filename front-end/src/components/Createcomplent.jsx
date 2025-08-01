@@ -1,12 +1,13 @@
-
-
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCameraRetro } from "@fortawesome/free-solid-svg-icons";
 import "leaflet/dist/leaflet.css";
 
-const Dashboard2 = () => {
+const Createcomplent = () => {
+  const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [description, setDescription] = useState("");
   const [isTrue, setIsTrue] = useState(false);
@@ -32,7 +33,7 @@ const Dashboard2 = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5050/api/submit-complaint",
+        "http://localhost:5050/api/complaint/create",
         formData,
         {
           headers: {
@@ -41,6 +42,7 @@ const Dashboard2 = () => {
         }
       );
       alert("Complaint Submitted Successfully");
+      navigate("/getcomplent");
       console.log(res.data);
     } catch (error) {
       alert("Error submitting complaint");
@@ -120,4 +122,4 @@ const Dashboard2 = () => {
   );
 };
 
-export default Dashboard2;
+export default Createcomplent;

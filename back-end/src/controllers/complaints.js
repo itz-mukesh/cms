@@ -1,6 +1,6 @@
 import Complaint from "../models/complaint.js";
 
-const createComplaint = async (req, res) => {
+export const createComplaint = async (req, res) => {
   try {
     console.log("File received:", req.file); // 👈 check this
 
@@ -22,8 +22,6 @@ const createComplaint = async (req, res) => {
     res.status(500).json({ message: "Failed to submit complaint", error });
   }
 };
-
-export default createComplaint;
 
 export const getAllComplaints = async (req, res) => {
   try {
