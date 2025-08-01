@@ -80,29 +80,76 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 // ✅ Register User
+// export const registerUser = async (req, res, next) => {
+//   try {
+//     const { name, email, password, role } = req.body;
+
+//     // 🔍 Check if user already exists
+//     const exist = await User.findOne({ email });
+//     if (exist) return res.status(400).json({ msg: "User already exists" });
+
+//     // 🔐 Hash password
+//     const hashedPassword = await bcrypt.hash(password, 10);
+
+//     // ✅ Create user with role (default to "citizen" if not provided)
+//     const user = await User.create({
+//       name,
+//       email,
+//       password: hashedPassword,
+//       role: role || "citizen", // default role
+//     });
+
+//     res.status(201).json({
+//       msg: "Registered successfully",
+//       userId: user._id,
+//       role: user.role,
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
 export const registerUser = async (req, res, next) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, phone, password, role } = req.body;
 
     // 🔍 Check if user already exists
     const exist = await User.findOne({ email });
-    if (exist) return res.status(400).json({ msg: "User already exists" });
+    if (exist)
+      return res
+        .status(400)
+        .json({ success: false, msg: "User already exists" });
 
-    // 🔐 Hash password
+    // 🔐 Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ Create user with role (default to "citizen" if not provided)
+    // ✅ Create the user
     const user = await User.create({
       name,
       email,
+      phone,
       password: hashedPassword,
-      role: role || "citizen", // default role
+      role: role || "citizen",
     });
 
+    // 🔑 Generate JWT Token
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    // 📤 Send response
     res.status(201).json({
+      success: true,
       msg: "Registered successfully",
-      userId: user._id,
-      role: user.role,
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+      },
     });
   } catch (err) {
     next(err);

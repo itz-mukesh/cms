@@ -10,7 +10,7 @@ const Register = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleRagister = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.post("http://localhost:5050/api/user/register", {
@@ -22,7 +22,10 @@ const Register = () => {
       });
 
       if (res.data.success) {
+
         localStorage.setItem("token", res.data.token);
+
+
         navigate("/login");
       } else {
         alert("Invalid credentials");
@@ -51,7 +54,7 @@ const Register = () => {
                 Register a account to be a hero
               </h2>
 
-              <form onSubmit={handleRagister} className="space-y-5">
+              <form onSubmit={handleRegister} className="space-y-5">
                 <div>
                   <input
                     type="text"

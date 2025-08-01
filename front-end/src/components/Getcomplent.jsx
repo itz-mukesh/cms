@@ -8,14 +8,7 @@ const Getcomplent = () => {
   const [complaints, setComplaints] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(true);
-  // 🆕 To track which complaint is open
 
-  // useEffect(() => {
-  //   fetch("http://localhost:5050/api/complaint/get-all")
-  //     .then((res) => res.json())
-  //     .then((data) => setComplaints(data.data))
-  //     .catch((err) => console.error("Failed to fetch complaints:", err));
-  // }, []);
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -26,7 +19,7 @@ const Getcomplent = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // ✅ yeh line add karo
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
