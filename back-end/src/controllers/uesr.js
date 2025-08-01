@@ -78,7 +78,12 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+import sendEmail from "../utils/sendEmail.js";
+import crypto from "crypto";
 
+dotenv.config();
 // ✅ Register User
 // export const registerUser = async (req, res, next) => {
 //   try {
@@ -108,6 +113,25 @@ import jwt from "jsonwebtoken";
 //     next(err);
 //   }
 // };
+const sendOTP = async (email, otp) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Verify Your Email - OTP",
+    html: `<h1>Your OTP is ${otp}</h1>`,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
 export const registerUser = async (req, res, next) => {
   try {
     const { name, email, phone, password, role } = req.body;
@@ -119,6 +143,9 @@ export const registerUser = async (req, res, next) => {
         .status(400)
         .json({ success: false, msg: "User already exists" });
 
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    const otpExpiry = Date.now() + 5 * 60 * 1000;
+
     // 🔐 Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -128,6 +155,9 @@ export const registerUser = async (req, res, next) => {
       email,
       phone,
       password: hashedPassword,
+      otp,
+      otpExpiry,
+      isVerified: false,
       role: role || "citizen",
     });
 
@@ -137,8 +167,9 @@ export const registerUser = async (req, res, next) => {
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
+    await sendOTP(email, otp);
+    // res.status(200).json({ message: "OTP sent to your email" });
 
-    // 📤 Send response
     res.status(201).json({
       success: true,
       msg: "Registered successfully",
@@ -152,6 +183,10 @@ export const registerUser = async (req, res, next) => {
       },
     });
   } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Registration failed", error: err.message });
+
     next(err);
   }
 };
@@ -181,6 +216,12 @@ export const loginUser = async (req, res, next) => {
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
+    );
+
+    await sendEmail(
+      user.email,
+      "Welcome Back!",
+      `Hi ${user.name},\n\nYou've successfully logged in to the Traffic Violation App.`
     );
 
     res.status(200).json({

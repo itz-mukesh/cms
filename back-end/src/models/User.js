@@ -12,14 +12,17 @@ const userSchema = new mongoose.Schema(
       unique: true,
     },
     phone: {
-  type: String,
-  required: true,
-  unique: true
-},
+      type: String,
+      required: true,
+      unique: true,
+    },
     password: {
       type: String,
       required: true,
     },
+    otp: String,
+    otpExpiry: Date,
+    isVerified: { type: Boolean, default: false },
     role: {
       type: String,
       enum: ["citizen", "admin"],

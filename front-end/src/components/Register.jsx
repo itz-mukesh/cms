@@ -20,13 +20,13 @@ const Register = () => {
         password,
         role: "citizen",
       });
-
+      console.log("Register Success:", res.data);
       if (res.data.success) {
+        // localStorage.setItem("token", res.data.token);
+        localStorage.setItem("pendingEmail", email);
 
-        localStorage.setItem("token", res.data.token);
-
-
-        navigate("/login");
+        navigate("/verify");
+        // navigate("/login");
       } else {
         alert("Invalid credentials");
       }
