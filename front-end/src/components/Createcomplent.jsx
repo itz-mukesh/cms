@@ -80,12 +80,18 @@ const Createcomplent = () => {
       {/* 📸 File Upload with preview */}
       <div className="flex flex-col justify-center items-center p-4 gap-2 w-[1500px] h-auto text-center rounded-2xl border shadow-sm border-gray-600 hover:border-[#1be7ff] hover:border-[2px] hover:shadow-xl hover:scale-101 duration-300">
         <FontAwesomeIcon icon={faCameraRetro} />
+        <label
+          htmlFor="fileUpload"
+          className="text-xl font-bold cursor-pointer"
+        >
+          Upload File
+        </label>
         <input
+          id="fileUpload"
           type="file"
           accept="image/*"
-          capture="environment"
           onChange={(e) => setFile(e.target.files[0])}
-          className="text-xl font-bold cursor-pointer"
+          className="hidden"
         />
         {/* ✅ Image Preview */}
         {file && (

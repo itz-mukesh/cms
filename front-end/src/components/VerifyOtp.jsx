@@ -1,7 +1,11 @@
-import React, { useRef, useState } from "react";
+import  { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import axios from "axios";
 
 const VerifyOTP = () => {
+  const navigate = useNavigate(); // navigate
+
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputs = useRef([]);
 
@@ -27,15 +31,19 @@ const VerifyOTP = () => {
 
   const handleVerify = async (e) => {
     e.preventDefault();
-    const finalOtp = otp.join("");
+    const finalOtp = otp.join("").trim();
     try {
-      const res = await axios.post("http://localhost:5050/api/verifyotp", {
-        email,
-        otp: finalOtp,
-      });
+      const res = await axios.post(
+        "http://localhost:5050/api/user/otpverification",
+        {
+          email,
+          otp: finalOtp,
+        }
+      );
       console.log(res);
       alert("Email verified successfully");
       localStorage.removeItem("pendingEmail");
+      navigate("/login");
     } catch (err) {
       console.error(err);
       alert("OTP verification failed");
